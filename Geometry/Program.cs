@@ -10,6 +10,44 @@ namespace Geometry
     {
         static void Main(string[] args)
         {
+            List<Circle> circles = new List<Circle>();
+            List<Square> squares = new List<Square>();
+            List<Rectangle> rectangles = new List<Rectangle>();
+            circles.Add((Circle)AddGeometryObject("c"));
+            squares.Add((Square)AddGeometryObject("s"));
+            rectangles.Add((Rectangle)AddGeometryObject("r"));
+            string objectsString = GetStringOfAllGeoObjects(new List<GeometryObject>().Concat(circles).Concat(squares).Concat(rectangles).ToList());
+            Console.WriteLine(objectsString);
+            Console.ReadLine();
+        }
+        static GeometryObject AddGeometryObject(string go)
+        {
+            if (go.ToLower() == "c")
+            {
+                return Circle.GetCircleFromConsole();
+            }
+            else if (go.ToLower() == "s")
+            {
+                return Square.GetSquareFromConsole();
+            }
+            else if (go.ToLower() == "r")
+            {
+                return Rectangle.GetRectangleFromConsole();
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+        static string GetStringOfAllGeoObjects(List<GeometryObject> objects)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < objects.Count; i++)
+            {
+                sb.Append($"{objects[i].GetType()} {i + 1}: {objects[i].ToString()}\n");
+            }
+            return sb.ToString();
+
         }
     }
     class GeometryObject

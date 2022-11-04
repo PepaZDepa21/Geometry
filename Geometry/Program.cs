@@ -10,15 +10,10 @@ namespace Geometry
     {
         static void Main(string[] args)
         {
-            List<Circle> circles = new List<Circle>();
-            List<Square> squares = new List<Square>();
-            List<Rectangle> rectangles = new List<Rectangle>();
-            circles.Add((Circle)AddGeometryObject("c"));
-            squares.Add((Square)AddGeometryObject("s"));
-            rectangles.Add((Rectangle)AddGeometryObject("r"));
-            string objectsString = GetStringOfAllGeoObjects(new List<GeometryObject>().Concat(circles).Concat(squares).Concat(rectangles).ToList());
-            Console.WriteLine(objectsString);
-            Console.ReadLine();
+            while (true) 
+            {
+                
+            }
         }
         static GeometryObject AddGeometryObject(string go)
         {
@@ -64,10 +59,21 @@ namespace Geometry
             return sb.ToString();
 
         }
-        //static List<GeometryObject> RemoveGeoObject(List<Circle> circles, List<Square> squares, List<Rectangle> rectangles, string removedItem)
-        //{
-
-        //}
+        static List<Circle> RemoveCircle(List<Circle> circles, int circleNum)
+        {
+            circles.RemoveAt(circleNum - 1);
+            return circles;
+        }
+        static List<Square> RemoveSquare(List<Square> squares, int squareNum)
+        {
+            squares.RemoveAt(squareNum - 1);
+            return squares;
+        }
+        static List<Rectangle> RemoveRectangle(List<Rectangle> rectangles, int rectangleNum)
+        {
+            rectangles.RemoveAt(rectangleNum - 1);
+            return rectangles;
+        }
     }
     class GeometryObject
     {

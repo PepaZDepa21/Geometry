@@ -8,12 +8,25 @@ namespace Geometry
 {
     internal class Program
     {
+        string version = "v1.0";
         static void Main(string[] args)
         {
-            while (true) 
-            {
-                
-            }
+            Console.WriteLine(GetHelpString());
+            Console.ReadLine();
+        }
+        static string GetHelpString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Comandline tool for 2D geometry.\n\n");
+            sb.Append("Global options:\n");
+            sb.Append("-h, --help   \tPrints usage information\n");
+            sb.Append("    --version\tPrints the current version\n\n");
+            sb.Append("Available commands:\n");
+            sb.Append("  Add       \tCreates new geometry object\n");
+            sb.Append("  Get       \tPrints all geometry objets and it's properties\n");
+            sb.Append("  Intersects\tChecks if 2 objects intersects in 2D base on their properties\n");
+            sb.Append("  Remove    \tRemoves geometry object you chose\n");
+            return sb.ToString();
         }
         static GeometryObject AddGeometryObject(string go)
         {

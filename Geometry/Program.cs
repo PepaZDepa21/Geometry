@@ -42,9 +42,10 @@ namespace Geometry
         static string GetStringOfAllGeoObjects(List<GeometryObject> objects)
         {
             StringBuilder sb = new StringBuilder();
+            sb.Append("\n");
             for (int i = 0; i < objects.Count; i++)
             {
-                sb.Append($"{objects[i].GetType()} {i + 1}: {objects[i].ToString()}\n");
+                sb.Append($"{objects[i].GetType().ToString().Split('.')[1]} {i + 1}: {objects[i].ToString()}\n");
             }
             return sb.ToString();
 

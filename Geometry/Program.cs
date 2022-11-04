@@ -42,13 +42,32 @@ namespace Geometry
         static string GetStringOfAllGeoObjects(List<GeometryObject> objects)
         {
             StringBuilder sb = new StringBuilder();
+            sb.Append("\n");
+            int objectCount = 1;
             for (int i = 0; i < objects.Count; i++)
             {
-                sb.Append($"{objects[i].GetType()} {i + 1}: {objects[i].ToString()}\n");
+                if (i == 0)
+                {
+                    sb.Append($"{objects[i].GetType().ToString().Split('.')[1]} {objectCount}: {objects[i].ToString()}\n");
+                }
+                else if (objects[i - 1].GetType() != objects[i].GetType())
+                {
+                    objectCount = 1;
+                    sb.Append($"{objects[i].GetType().ToString().Split('.')[1]} {objectCount}: {objects[i].ToString()}\n");
+                }
+                else
+                {
+                    sb.Append($"{objects[i].GetType().ToString().Split('.')[1]} {objectCount}: {objects[i].ToString()}\n");
+                }
+                
             }
             return sb.ToString();
 
         }
+        //static List<GeometryObject> RemoveGeoObject(List<Circle> circles, List<Square> squares, List<Rectangle> rectangles, string removedItem)
+        //{
+
+        //}
     }
     class GeometryObject
     {
@@ -89,19 +108,46 @@ namespace Geometry
         public Circle(double centerOfGravitX, double centerOfGravitY, double rad) : base(centerOfGravitX, centerOfGravitY) { this.Radius = rad; }
         public static Circle GetCircleFromConsole()
         {
+            double? x = null;
+            double? y = null;
+            double? r = null;
             while (true)
             {
                 try
                 {
-                    Console.Write("Enter the X cordinate of the circle center: ");
-                    double x = double.Parse(Console.ReadLine());
-                    Console.Write("Enter the Y cordinate of the circle center: ");
-                    double y = double.Parse(Console.ReadLine());
-                    Console.Write("Enter the length of radius of the circle: ");
-                    double r = double.Parse(Console.ReadLine());
-                    return new Circle(x, y, r);
+                    if (x is null)
+                    {
+                        Console.Write("Enter the X cordinate of the circle's center: ");
+                        x = double.Parse(Console.ReadLine());
+                    }
+                    if (y is null)
+                    {
+                        Console.Write("Enter the Y cordinate of the circle's center: ");
+                        y = double.Parse(Console.ReadLine());
+                    }
+                    if (r is null)
+                    {
+                        Console.Write("Enter the length of radius of the circle: ");
+                        r = double.Parse(Console.ReadLine());
+                        return new Circle(x.Value, y.Value, r.Value);
+                    }
                 }
-                catch (Exception) { }
+                catch (Exception e)
+                {
+                    if (e is ArgumentException)
+                    {
+                        Console.WriteLine("A positive number was expected!");
+                        r = null;
+                    }
+                    else if (e is FormatException)
+                    {
+                        Console.WriteLine("A number was expected!");
+                    }
+                    else
+                    {
+                          throw new NullReferenceException();
+                    }
+                }
             }
         }
         public override double Perimeter() => 2 * Math.PI * Radius;
@@ -179,19 +225,46 @@ namespace Geometry
         public Square(double centerOfGravitX, double centerOfGravitY, double sid) : base(centerOfGravitX, centerOfGravitY) { this.Side = sid; }
         public static Square GetSquareFromConsole()
         {
+            double? x = null;
+            double? y = null;
+            double? a = null;
             while (true)
             {
                 try
                 {
-                    Console.Write("Enter the X cordinate of the square center: ");
-                    double x = double.Parse(Console.ReadLine());
-                    Console.Write("Enter the Y cordinate of the square center: ");
-                    double y = double.Parse(Console.ReadLine());
-                    Console.Write("Enter the length of side of the square: ");
-                    double s = double.Parse(Console.ReadLine());
-                    return new Square(x, y, s);
+                    if (x is null)
+                    {
+                        Console.Write("Enter the X cordinate of the square's center: ");
+                        x = double.Parse(Console.ReadLine());
+                    }
+                    if (y is null)
+                    {
+                        Console.Write("Enter the Y cordinate of the square's center: ");
+                        y = double.Parse(Console.ReadLine());
+                    }
+                    if (a is null)
+                    {
+                        Console.Write("Enter length of the square's side: ");
+                        a = double.Parse(Console.ReadLine());
+                        return new Square(x.Value, y.Value, a.Value);
+                    }
                 }
-                catch (Exception) { }
+                catch (Exception e)
+                {
+                    if (e is ArgumentException)
+                    {
+                        Console.WriteLine("A positive number was expected!");
+                        a = null;
+                    }
+                    else if (e is FormatException)
+                    {
+                        Console.WriteLine("A number was expected!");
+                    }
+                    else
+                    {
+                        throw new NullReferenceException();
+                    }
+                }
             }
         }
         public override double Perimeter() => 4 * Side;
@@ -316,21 +389,64 @@ namespace Geometry
         }
         public static Rectangle GetRectangleFromConsole()
         {
+            double? x = null;
+            double? y = null;
+            double? a = null;
+            double? b = null;
             while (true)
             {
                 try
                 {
-                    Console.Write("Enter the X cordinate of the rectangle center: ");
-                    double x = double.Parse(Console.ReadLine());
-                    Console.Write("Enter the Y cordinate of the rectangle center: ");
-                    double y = double.Parse(Console.ReadLine());
-                    Console.Write("Enter the length of the a side of the rectangle: ");
-                    double a = double.Parse(Console.ReadLine());
-                    Console.Write("Enter the length of the b side of the rectangle: ");
-                    double b = double.Parse(Console.ReadLine());
-                    return new Rectangle(x, y, a, b);
+                    if (x is null)
+                    {
+                        Console.Write("Enter the X cordinate of the rectangle's center: ");
+                        x = double.Parse(Console.ReadLine());
+                    }
+                    if (y is null)
+                    {
+                        Console.Write("Enter the Y cordinate of the rectangle's center: ");
+                        y = double.Parse(Console.ReadLine());
+                    }
+                    if (a is null)
+                    {
+                        Console.Write("Enter length of the rectangle's a side: ");
+                        a = double.Parse(Console.ReadLine());
+                    }
+                    if (b is null && a > 0)
+                    {
+                        Console.Write("Enter length of the rectangle's b side: ");
+                        b = double.Parse(Console.ReadLine());
+                    }
+                    return new Rectangle(x.Value, y.Value, a.Value, b.Value);
                 }
-                catch (Exception) { }
+                catch (Exception e)
+                {
+                    if (e is ArgumentException)
+                    {
+                        Console.WriteLine("A positive number was expected!");
+                        if (a <= 0)
+                        {
+                            a = null;
+                        }
+                        if (b <= 0)
+                        {
+                            b = null;
+                        }
+                    }
+                    else if (e is InvalidOperationException)
+                    {
+                        Console.WriteLine("A positive number was expected!");
+                        a = null;
+                    }
+                    else if (e is FormatException)
+                    {
+                        Console.WriteLine("A number was expected!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Unknown error!");
+                    }
+                }
             }
         }
         public override double Perimeter() => 2 * ASide + 2 * BSide;

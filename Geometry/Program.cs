@@ -13,6 +13,7 @@ namespace Geometry
         {
             string version = "v1.0";
             Console.WriteLine(GetStartString(version));
+            Console.WriteLine(GetAllIntersectsHelp());
             Console.ReadLine();
         }
         public static string GetStartString(string version)
@@ -53,6 +54,18 @@ namespace Geometry
             sb.Append("  [Rectangle]\tCreates rectangle then asks you to enter it's properties\n");
             sb.Append("  [Square]   \tCreates square then asks you to enter it's properties\n");
             return sb.ToString();
+        }
+        public static string GetAllIntersectsHelp()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Return every object that intersects with given object\n\n");
+            sb.Append("Usage:   AllIntersects [object-type][object-number]\n");
+            sb.Append("Example: All Intersects Rectangle2\n\n");
+            sb.Append("-h, --help     \tPrints this usage information.\n\n");
+            sb.Append("  [Circle]   \tObject of type Circle\n");
+            sb.Append("  [Square]   \tObject of type Square\n");
+            sb.Append("  [Rectangle]\tObject of type Rectangle\n");
+            return sb.ToString(); 
         }
         public static string GetGetHelpString()
         {

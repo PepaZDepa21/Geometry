@@ -47,8 +47,8 @@ namespace Geometry
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Create new object\n\n");
-            sb.Append("Usage:   Add [object-type]\n");
-            sb.Append("Example: Add Square");
+            sb.Append("Usage:   Geometry Add [object-type]\n");
+            sb.Append("Example: Geometry Add Square");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circle]   \tCreates circle then asks you to enter it's properties\n");
             sb.Append("  [Rectangle]\tCreates rectangle then asks you to enter it's properties\n");
@@ -59,8 +59,8 @@ namespace Geometry
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Return every object that intersects with given object\n\n");
-            sb.Append("Usage:   AllIntersects [object-type][object-number]\n");
-            sb.Append("Example: All Intersects Rectangle2\n\n");
+            sb.Append("Usage:   Geometry AllIntersects [object-type][object-number]\n");
+            sb.Append("Example: Geometry All Intersects Rectangle2\n\n");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circle]   \tObject of type Circle\n");
             sb.Append("  [Square]   \tObject of type Square\n");
@@ -71,9 +71,9 @@ namespace Geometry
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Get properties of every existing objects or certain object type\n\n");
-            sb.Append("Usage:    Get (optional)[object-type]\n");
-            sb.Append("Example1: Get\n");
-            sb.Append("Example2: Get Square\n\n");
+            sb.Append("Usage:    Geometry Get (optional)[object-type]\n");
+            sb.Append("Example1: Geometry Get\n");
+            sb.Append("Example2: Geometry Get Square\n\n");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circle]   \tGet properties of every existing circle\n");
             sb.Append("  [Rectangle]\tGet properties of every existing rectangle\n");
@@ -84,8 +84,8 @@ namespace Geometry
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Check if 2 objects intersects in 2D\n\n");
-            sb.Append("Usage:   Intersect [first-object-type][first-object-number] [second-object-type][second-object-number]\n");
-            sb.Append("Example: Intersect Circle1 Square3\n\n");
+            sb.Append("Usage:   Geometry Intersect [first-object-type][first-object-number] [second-object-type][second-object-number]\n");
+            sb.Append("Example: Geometry Intersect Circle1 Square3\n\n");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circle]   \tObject type of Circle + Circle number\n");
             sb.Append("  [Rectangle]\tObject type of Rectagle + Rectangle number\n");
@@ -96,8 +96,8 @@ namespace Geometry
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Remove certain instance of object\n\n");
-            sb.Append("Usage:   Remove [object-type][object-number]\n");
-            sb.Append("Example: Remove Square2\n\n");
+            sb.Append("Usage:   Geometry Remove [object-type][object-number]\n");
+            sb.Append("Example: Geometry Remove Square2\n\n");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circle]   \tRemoves the determined Circle\n");
             sb.Append("  [Rectangle]\tRemoves the determined Rectangle\n");
@@ -108,8 +108,8 @@ namespace Geometry
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Remove certain instance object\n\n");
-            sb.Append("Usage:   RemoveAll [object-type][object-number]\n");
-            sb.Append("Example: RemoveAll Squares\n");
+            sb.Append("Usage:   Geometry RemoveAll [object-type][object-number]\n");
+            sb.Append("Example: Geometry RemoveAll Squares\n");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circles]   \tRemoves every existing cirlce\n");
             sb.Append("  [Objects]   \tRemoves every existing geometry object\n");

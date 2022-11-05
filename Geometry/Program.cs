@@ -13,7 +13,14 @@ namespace Geometry
         {
             string version = "v1.0";
             Console.WriteLine(GetStartString(version));
+            Console.WriteLine(GetHelpWithCommand("Add"));
+            Console.WriteLine(GetHelpString());
+            Console.WriteLine(GetAddHelpString());
             Console.WriteLine(GetAllIntersectsHelp());
+            Console.WriteLine(GetGetHelpString());
+            Console.WriteLine(GetIntersectHelpString());
+            Console.WriteLine(GetRemoveHelpString());
+            Console.WriteLine(GetRemoveAllHelpString());
             Console.ReadLine();
         }
         public static string GetStartString(string version)

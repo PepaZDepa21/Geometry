@@ -12,15 +12,7 @@ namespace Geometry
         static void Main(string[] args)
         {
             string version = "v1.0";
-            Console.WriteLine(GetStartString(version));
-            Console.WriteLine(GetHelpWithCommand("Add"));
-            Console.WriteLine(GetHelpString());
-            Console.WriteLine(GetAddHelpString());
-            Console.WriteLine(GetAllIntersectsHelp());
-            Console.WriteLine(GetGetHelpString());
-            Console.WriteLine(GetIntersectHelpString());
-            Console.WriteLine(GetRemoveHelpString());
-            Console.WriteLine(GetRemoveAllHelpString());
+            Console.WriteLine(GetStringOfAllGeoObjects(new List<GeometryObject> { new Circle(), new Circle(), new Square(), new Square(), new Rectangle(), new Rectangle() }));
             Console.ReadLine();
         }
         public static string GetStartString(string version)
@@ -150,20 +142,67 @@ namespace Geometry
             int objectCount = 1;
             for (int i = 0; i < objects.Count; i++)
             {
+                string behindOC = new String(' ', 5 - objectCount.ToString().Length);
                 if (i == 0)
                 {
-                    sb.Append($"{objects[i].GetType().ToString().Split('.')[1]} {objectCount}: {objects[i].ToString()}\n");
-                }
-                else if (objects[i - 1].GetType() != objects[i].GetType())
-                {
-                    objectCount = 1;
-                    sb.Append($"{objects[i].GetType().ToString().Split('.')[1]} {objectCount}: {objects[i].ToString()}\n");
+                    sb.Append("+-----------+--------+-----------------------+\n");
+                    sb.Append("| Object    | Object |  Object               |\n");
+                    sb.Append("| Type      | Number |  Properties           |\n");
+                    sb.Append("+-----------+--------+-----------------------+\n");
+                    if (objects[i] is Circle)
+                    {
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objectCount}{behindOC}| {objects[i].ToString()}   |\n");
+                        sb.Append("+-----------+--------+-----------------------+\n");
+                    }
+                    else if (objects[i] is Square)
+                    {
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objectCount}{behindOC}| {objects[i].ToString()}    r\n");
+                        sb.Append("+-----------+--------+-----------------------+\n");
+                    }
+                    else if (objects[i] is Rectangle)
+                    {
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]} |   {objectCount}{behindOC}| {objects[i].ToString()}  e\n");
+                        sb.Append("+-----------+--------+-----------------------+\n");
+                    }
+                    if (objects[i].GetType() != objects[i + 1].GetType())
+                    {
+                        objectCount = 1;
+                    }
+                    else
+                    {
+                        objectCount++;
+                    }
                 }
                 else
                 {
-                    sb.Append($"{objects[i].GetType().ToString().Split('.')[1]} {objectCount}: {objects[i].ToString()}\n");
+                    if (objects[i] is Circle)
+                    {
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objectCount}{behindOC}| {objects[i].ToString()}   |\n");
+                        sb.Append("+-----------+--------+-----------------------+\n");
+                    }
+                    else if (objects[i] is Square)
+                    {
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objectCount}{behindOC}| {objects[i].ToString()}     |\n");
+                        sb.Append("+-----------+--------+-----------------------+\n");
+                    }
+                    else if (objects[i] is Rectangle)
+                    {
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]} |   {objectCount}{behindOC}| {objects[i].ToString()}   |\n");
+                        sb.Append("+-----------+--------+-----------------------+\n");
+                    }
+                    try
+                    {
+                        if (objects[i].GetType() != objects[i + 1].GetType())
+                        {
+                            objectCount = 1;
+                        }
+                        else
+                        {
+                            objectCount++;
+                        }
+                    }
+                    catch (Exception) { }
                 }
-                
             }
             return sb.ToString();
 

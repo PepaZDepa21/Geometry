@@ -35,13 +35,15 @@ namespace Geometry
             sb.Append("Available commands:\n");
             sb.Append("  Add         \tCreates new object\n");
             sb.Append("  AllIntersets\tReturns all object that intersects with given object\n");
+            sb.Append("  Area        \tCalculates the area of given object");
             sb.Append("  Get         \tPrints all geometry objets and it's properties\n");
             sb.Append("  Intersects  \tChecks if 2 objects intersects in 2D base on their properties\n");
+            sb.Append("  Perimeter   \tCalculates the perimeter of given object");
             sb.Append("  Remove      \tRemoves object you chose\n");
             sb.Append("  RemoveAll   \tRemoves all instances of given type");
             return sb.ToString();
         }
-        public static string GetHelpWithCommand(string command) => $"For help with command {command} type \"{command} -h\" or \"{command} --help\"";
+        public static string GetHelpWithCommandString(string command) => $"For help with command {command} type \"{command} -h\" or \"{command} --help\"";
         public static string GetAddHelpString()
         {
             StringBuilder sb = new StringBuilder();
@@ -54,7 +56,7 @@ namespace Geometry
             sb.Append("  [Square]   \tCreates square then asks you to enter it's properties\n");
             return sb.ToString();
         }
-        public static string GetAllIntersectsHelp()
+        public static string GetAllIntersectsHelpString()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Return every object that intersects with given object\n\n");
@@ -65,6 +67,18 @@ namespace Geometry
             sb.Append("  [Square]   \tObject of type Square\n");
             sb.Append("  [Rectangle]\tObject of type Rectangle\n");
             return sb.ToString(); 
+        }
+        public static string GetAreaHelpString() 
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Calculates the area of given object\n\n");
+            sb.Append("Usage:   Geometry Area [object-type][object-number]\n");
+            sb.Append("Example: Geometry Area Circle2\n\n");
+            sb.Append("-h, --help     \tPrints this usage information.\n\n");
+            sb.Append("  [Circle]   \tObject of type Circle\n");
+            sb.Append("  [Square]   \tObject of type Square\n");
+            sb.Append("  [Rectangle]\tObject of type Rectangle\n");
+            return sb.ToString();
         }
         public static string GetGetHelpString()
         {
@@ -89,6 +103,18 @@ namespace Geometry
             sb.Append("  [Circle]   \tObject type of Circle + Circle number\n");
             sb.Append("  [Rectangle]\tObject type of Rectagle + Rectangle number\n");
             sb.Append("  [Square]   \tObject type of Square + Square number\n");
+            return sb.ToString();
+        }
+        public static string GetPerimeterHelpString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Calculates the perimeter of given object\n\n");
+            sb.Append("Usage:   Geometry Perimeter [object-type][object-number]\n");
+            sb.Append("Example: Geometry Perimeter Square1\n\n");
+            sb.Append("-h, --help     \tPrints this usage information.\n\n");
+            sb.Append("  [Circle]   \tObject of type Circle\n");
+            sb.Append("  [Square]   \tObject of type Square\n");
+            sb.Append("  [Rectangle]\tObject of type Rectangle\n");
             return sb.ToString();
         }
         public static string GetRemoveHelpString()

@@ -12,7 +12,8 @@ namespace Geometry
         static void Main(string[] args)
         {
             string version = "v1.0";
-            Console.WriteLine(GetStringOfAllGeoObjects(new List<GeometryObject> { new Circle(), new Circle(), new Square(), new Square(), new Rectangle(), new Rectangle() }));
+            //Console.WriteLine(GetStringOfAllGeoObjects(new List<GeometryObject> { new Circle(), new Circle(), new Square(), new Square(), new Rectangle(), new Rectangle() }));
+            Console.WriteLine(GetHelpString());
             Console.ReadLine();
         }
         public static string GetStartString(string version)
@@ -35,12 +36,12 @@ namespace Geometry
             sb.Append("Available commands:\n");
             sb.Append("  Add         \tCreates new object\n");
             sb.Append("  AllIntersets\tReturns all object that intersects with given object\n");
-            sb.Append("  Area        \tCalculates the area of given object");
+            sb.Append("  Area        \tCalculates the area of given object\n");
             sb.Append("  Get         \tPrints all geometry objets and it's properties\n");
             sb.Append("  Intersects  \tChecks if 2 objects intersects in 2D base on their properties\n");
-            sb.Append("  Perimeter   \tCalculates the perimeter of given object");
+            sb.Append("  Perimeter   \tCalculates the perimeter of given object\n");
             sb.Append("  Remove      \tRemoves object you chose\n");
-            sb.Append("  RemoveAll   \tRemoves all instances of given type");
+            sb.Append("  RemoveAll   \tRemoves all instances of given type\n");
             return sb.ToString();
         }
         public static string GetHelpWithCommandString(string command) => $"For help with command {command} type \"{command} -h\" or \"{command} --help\"";

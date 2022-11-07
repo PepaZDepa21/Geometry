@@ -8,18 +8,18 @@ using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Geometry
-{
+{ 
     internal class Program
     {
         static void Main(string[] args)
         {
             string version = "v1.0";
-            List<Circle> circles = new List<Circle>() { new Circle(), new Circle()};
-            List<Rectangle> rectangles = new List<Rectangle>() { new Rectangle(), new Rectangle()};
-            List<Square> squares = new List<Square>() { new Square(), new Square() };
+            List<Circle> circles = new List<Circle>() { new Circle(4, 5, 1, 7), new Circle(5, 4, 2, 7) };
+            List<Rectangle> rectangles = new List<Rectangle>() { new Rectangle(7, 8, 1, 1, 2), new Rectangle(1, 8, 2, 4, 2) };
+            List<Square> squares = new List<Square>() { new Square(3, 7, 1, 7), new Square(5, 4, 2, 7) };
             List<GeometryObject> geometryObject = new List<GeometryObject>();
-            Console.WriteLine(GetStringOfAllGeoObjects(new List<GeometryObject> { new Circle(), new Circle(), new Square(), new Square(), new Rectangle(), new Rectangle() }));
-            Console.WriteLine(AllIntersects(Rectangle.GetRectangleFromConsole(3), geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
+            Console.WriteLine(GetStringOfAllGeoObjects(geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
+            Console.WriteLine(AllIntersects(Rectangle.GetRectangleFromConsole(1), geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
             Console.ReadLine();
         }
         public static string GetStartString(string version)
@@ -172,28 +172,37 @@ namespace Geometry
             sb.Append("+--------------+-------------------------------------+\n");
             sb.Append("| Object       | Objects that Intersects with Object |\n");
             sb.Append("+--------------+-------------------------------------+\n");
-            sb.Append($"| {go.Name}{new String(' ', 13 - go.Name.Length)}|");
-            //foreach (var item in objects)
-            //{
-            //    if (item == go)
-            //    {
-            //        continue;
-            //    }
-            //    if (go.IntersectsWith(item))
-            //    {
-            //        intesects.Append(item);
-            //    }
-            //}
+            sb.Append($"| {go.GetType().ToString().Split('.')[1]}{go.ID}{new String(' ', 13 - go.GetType().ToString().Split('.')[1].Length - go.ID.ToString().Length)}| ");
+            foreach (var item in objects)
+            {
+                if (go.GetType().ToString().Split('.')[1]+go.ID.ToString() == item.GetType().ToString().Split('.')[1] + item.ID.ToString())
+                {
+                    continue;
+                }
+                if (go.IntersectsWith(item))
+                {
+                    intesects.Append(item);
+                }
+            }
+            if (intesects.Count > 0)
+            {
+                sb.Append($"{intesects[0].GetType().ToString().Split('.')[1]}{intesects[0].ID}{new String(' ', 36 - intesects[0].GetType().ToString().Split('.')[1].Length - intesects[0].ToString().Length)}|\n");
+                sb.Append("+--------------+-------------------------------------+\n");
+                for (int i = 1; i < intesects.Count; i++)
+                {
+                    sb.Append($"               | {intesects[i].GetType().ToString().Split('.')[1]}{intesects[i].ID}{new String(' ', 36 - intesects[i].GetType().ToString().Split('.')[1].Length - intesects[i].ToString().Length)}|\n");
+                    sb.Append("               +-------------------------------------+\n");
+                }
+            }
             return sb.ToString();
         }
         public static string GetStringOfAllGeoObjects(List<GeometryObject> objects)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("\n");
-            int objectCount = 1;
             for (int i = 0; i < objects.Count; i++)
             {
-                string behindOC = new String(' ', 5 - objectCount.ToString().Length);
+                string behindOC = new String(' ', 5 - objects[i].ID.ToString().Length);
                 if (i == 0)
                 {
                     sb.Append("+-----------+--------+-----------------------+\n");
@@ -202,57 +211,37 @@ namespace Geometry
                     sb.Append("+-----------+--------+-----------------------+\n");
                     if (objects[i] is Circle)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objectCount}{behindOC}| {objects[i].ToString()}   |\n");
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}   |\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
                     else if (objects[i] is Square)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objectCount}{behindOC}| {objects[i].ToString()}    r\n");
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}    r\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
                     else if (objects[i] is Rectangle)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]} |   {objectCount}{behindOC}| {objects[i].ToString()}  e\n");
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]} |   {objects[i].ID}{behindOC}| {objects[i].ToString()}  e\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
-                    }
-                    if (objects[i].GetType() != objects[i + 1].GetType())
-                    {
-                        objectCount = 1;
-                    }
-                    else
-                    {
-                        objectCount++;
                     }
                 }
                 else
                 {
                     if (objects[i] is Circle)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objectCount}{behindOC}| {objects[i].ToString()}   |\n");
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}   |\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
                     else if (objects[i] is Square)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objectCount}{behindOC}| {objects[i].ToString()}     |\n");
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}     |\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
                     else if (objects[i] is Rectangle)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]} |   {objectCount}{behindOC}| {objects[i].ToString()}   |\n");
+                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]} |   {objects[i].ID}{behindOC}| {objects[i].ToString()}   |\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
-                    try
-                    {
-                        if (objects[i].GetType() != objects[i + 1].GetType())
-                        {
-                            objectCount = 1;
-                        }
-                        else
-                        {
-                            objectCount++;
-                        }
-                    }
-                    catch (Exception) { }
                 }
             }
             return sb.ToString();
@@ -280,33 +269,23 @@ namespace Geometry
         public double CenterOfGravityX { get => this.centerOfGravityX; set => this.centerOfGravityX = value; }
         private double centerOfGravityY;
         public double CenterOfGravityY { get => this.centerOfGravityY; set => this.centerOfGravityY = value; }
-        private string name;
-        public string Name
+        private int id;
+        public int ID
         {
-            get => this.name;
-            set
-            {
-                if (" " == value)
-                {
-                    throw new ArgumentException();
-                }
-                else if (" " != value)
-                {
-                    this.name = value;
-                }
-            }
+            get => this.id;
+            set => this.id = value;
         }
-        public GeometryObject() : this(0, 0, $"GeometryObject1") { }
-        public GeometryObject(double centerGravityX, double centerGravityY, string nam)
+        public GeometryObject() : this(0, 0, 1) { }
+        public GeometryObject(double centerGravityX, double centerGravityY, int objectID)
         {
             this.CenterOfGravityX = centerGravityX;
             this.CenterOfGravityY = centerGravityY;
-            this.Name = nam;
+            this.ID = objectID;
         }
         public virtual double Perimeter() => 0;
         public virtual double Area() => 0;
         public virtual bool IntersectsWith(GeometryObject go) => false;
-        public override string ToString() => $"X: {this.CenterOfGravityX} Y: {this.CenterOfGravityY}";
+        public override string ToString() => $"X: {CenterOfGravityX} Y: {CenterOfGravityY}";
         public override bool Equals(object other)
         {
             GeometryObject go = other as GeometryObject;
@@ -334,8 +313,8 @@ namespace Geometry
                 }
             }
         }
-        public Circle() : this(0, 0, "Circle1", 1) { }
-        public Circle(double centerOfGravitX, double centerOfGravitY, string nam, double rad) : base(centerOfGravitX, centerOfGravitY, nam) { this.Radius = rad; }
+        public Circle() : this(0, 0, 1, 1) { }
+        public Circle(double centerOfGravitX, double centerOfGravitY, int circleID, double rad) : base(centerOfGravitX, centerOfGravitY, circleID) { this.Radius = rad; }
         public static Circle GetCircleFromConsole(int circleID)
         {
             double? x = null;
@@ -359,7 +338,7 @@ namespace Geometry
                     {
                         Console.Write("Enter the length of radius of the circle: ");
                         r = double.Parse(Console.ReadLine());
-                        return new Circle(x.Value, y.Value, $"Circle{circleID}", r.Value);
+                        return new Circle(x.Value, y.Value, circleID, r.Value);
                     }
                 }
                 catch (Exception e)
@@ -459,8 +438,8 @@ namespace Geometry
                 }
             }
         }
-        public Square() : this(0, 0, "Square1", 1) { }
-        public Square(double centerOfGravitX, double centerOfGravitY, string nam, double sid) : base(centerOfGravitX, centerOfGravitY, nam) { this.Side = sid; this.Name = nam; }
+        public Square() : this(0, 0, 1, 1) { }
+        public Square(double centerOfGravitX, double centerOfGravitY, int squareID, double sid) : base(centerOfGravitX, centerOfGravitY, squareID) { this.Side = sid; this.ID = squareID; }
         public static Square GetSquareFromConsole(int squareID)
         {
             double? x = null;
@@ -484,7 +463,7 @@ namespace Geometry
                     {
                         Console.Write("Enter length of the square's side: ");
                         a = double.Parse(Console.ReadLine());
-                        return new Square(x.Value, y.Value, $"Square{squareID}", a.Value);
+                        return new Square(x.Value, y.Value, squareID, a.Value);
                     }
                 }
                 catch (Exception e)
@@ -627,12 +606,12 @@ namespace Geometry
                 }
             }
         }
-        public Rectangle() : this(0, 0, "Rectangle1", 1, 2) { }
-        public Rectangle(double centerOfGravitX, double centerOfGravitY, string name, double aSid, double bSid) : base(centerOfGravitX, centerOfGravitY, name)
+        public Rectangle() : this(0, 0, 1, 1, 2) { }
+        public Rectangle(double centerOfGravitX, double centerOfGravitY, int rectangleID, double aSid, double bSid) : base(centerOfGravitX, centerOfGravitY, rectangleID)
         {
             this.ASide = aSid;
             this.BSide = bSid;
-            this.Name = name;
+            this.ID = rectangleID;
         }
         public static Rectangle GetRectangleFromConsole(int rectangleID)
         {
@@ -664,7 +643,7 @@ namespace Geometry
                         Console.Write("Enter length of the rectangle's b side: ");
                         b = double.Parse(Console.ReadLine());
                     }
-                    return new Rectangle(x.Value, y.Value, $"Rectangle{rectangleID}", a.Value, b.Value);
+                    return new Rectangle(x.Value, y.Value, rectangleID, a.Value, b.Value);
                 }
                 catch (Exception e)
                 {

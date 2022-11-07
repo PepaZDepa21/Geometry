@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Geometry
@@ -12,8 +14,12 @@ namespace Geometry
         static void Main(string[] args)
         {
             string version = "v1.0";
-            //Console.WriteLine(GetStringOfAllGeoObjects(new List<GeometryObject> { new Circle(), new Circle(), new Square(), new Square(), new Rectangle(), new Rectangle() }));
-            Console.WriteLine(GetHelpString());
+            List<Circle> circles = new List<Circle>() { new Circle(), new Circle()};
+            List<Rectangle> rectangles = new List<Rectangle>() { new Rectangle(), new Rectangle()};
+            List<Square> squares = new List<Square>() { new Square(), new Square() };
+            List<GeometryObject> geometryObject = new List<GeometryObject>();
+            Console.WriteLine(GetStringOfAllGeoObjects(new List<GeometryObject> { new Circle(), new Circle(), new Square(), new Square(), new Rectangle(), new Rectangle() }));
+            Console.WriteLine(AllIntersects(Rectangle.GetRectangleFromConsole(3), geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
             Console.ReadLine();
         }
         public static string GetStartString(string version)
@@ -145,22 +151,40 @@ namespace Geometry
         }
         public static GeometryObject AddGeometryObject(string go)
         {
-            if (go.ToLower() == "c")
+            if (go.ToLower() == "circle")
             {
-                return Circle.GetCircleFromConsole();
+                //return Circle.GetCircleFromConsole();
             }
-            else if (go.ToLower() == "s")
+            else if (go.ToLower() == "square")
             {
-                return Square.GetSquareFromConsole();
+                //return Square.GetSquareFromConsole();
             }
-            else if (go.ToLower() == "r")
+            else if (go.ToLower() == "rectangle")
             {
-                return Rectangle.GetRectangleFromConsole();
+                //return Rectangle.GetRectangleFromConsole();
             }
-            else
-            {
-                throw new ArgumentException();
-            }
+            throw new ArgumentException();
+        }
+        public static string AllIntersects(GeometryObject go, List<GeometryObject> objects)
+        {
+            List<GeometryObject> intesects = new List<GeometryObject>();
+            StringBuilder sb = new StringBuilder();
+            sb.Append("+--------------+-------------------------------------+\n");
+            sb.Append("| Object       | Objects that Intersects with Object |\n");
+            sb.Append("+--------------+-------------------------------------+\n");
+            sb.Append($"| {go.Name}{new String(' ', 13 - go.Name.Length)}|");
+            //foreach (var item in objects)
+            //{
+            //    if (item == go)
+            //    {
+            //        continue;
+            //    }
+            //    if (go.IntersectsWith(item))
+            //    {
+            //        intesects.Append(item);
+            //    }
+            //}
+            return sb.ToString();
         }
         public static string GetStringOfAllGeoObjects(List<GeometryObject> objects)
         {
@@ -256,16 +280,41 @@ namespace Geometry
         public double CenterOfGravityX { get => this.centerOfGravityX; set => this.centerOfGravityX = value; }
         private double centerOfGravityY;
         public double CenterOfGravityY { get => this.centerOfGravityY; set => this.centerOfGravityY = value; }
-        public GeometryObject() : this(0, 0) { }
-        public GeometryObject(double centerGravityX, double centerGravityY)
+        private string name;
+        public string Name
+        {
+            get => this.name;
+            set
+            {
+                if (" " == value)
+                {
+                    throw new ArgumentException();
+                }
+                else if (" " != value)
+                {
+                    this.name = value;
+                }
+            }
+        }
+        public GeometryObject() : this(0, 0, $"GeometryObject1") { }
+        public GeometryObject(double centerGravityX, double centerGravityY, string nam)
         {
             this.CenterOfGravityX = centerGravityX;
             this.CenterOfGravityY = centerGravityY;
+            this.Name = nam;
         }
         public virtual double Perimeter() => 0;
         public virtual double Area() => 0;
         public virtual bool IntersectsWith(GeometryObject go) => false;
         public override string ToString() => $"X: {this.CenterOfGravityX} Y: {this.CenterOfGravityY}";
+        public override bool Equals(object other)
+        {
+            GeometryObject go = other as GeometryObject;
+            return go.CenterOfGravityX == CenterOfGravityX && go.CenterOfGravityY == CenterOfGravityY;
+        }
+        public override int GetHashCode() => CenterOfGravityX.GetHashCode() ^ CenterOfGravityY.GetHashCode();
+        public static bool operator ==(GeometryObject g1, GeometryObject g2) => g1.Equals(g2);
+        public static bool operator !=(GeometryObject g1, GeometryObject g2) => !g1.Equals(g2);
     }
     class Circle : GeometryObject
     {
@@ -285,9 +334,9 @@ namespace Geometry
                 }
             }
         }
-        public Circle() : this(0, 0, 1) { }
-        public Circle(double centerOfGravitX, double centerOfGravitY, double rad) : base(centerOfGravitX, centerOfGravitY) { this.Radius = rad; }
-        public static Circle GetCircleFromConsole()
+        public Circle() : this(0, 0, "Circle1", 1) { }
+        public Circle(double centerOfGravitX, double centerOfGravitY, string nam, double rad) : base(centerOfGravitX, centerOfGravitY, nam) { this.Radius = rad; }
+        public static Circle GetCircleFromConsole(int circleID)
         {
             double? x = null;
             double? y = null;
@@ -310,7 +359,7 @@ namespace Geometry
                     {
                         Console.Write("Enter the length of radius of the circle: ");
                         r = double.Parse(Console.ReadLine());
-                        return new Circle(x.Value, y.Value, r.Value);
+                        return new Circle(x.Value, y.Value, $"Circle{circleID}", r.Value);
                     }
                 }
                 catch (Exception e)
@@ -383,6 +432,14 @@ namespace Geometry
             }
         }
         public override string ToString() => base.ToString() + $" Radius: {Radius}";
+        public override bool Equals(object other)
+        {
+            Circle c = other as Circle;
+            return base.Equals(c) && c.Radius == Radius;
+        }
+        public override int GetHashCode() => CenterOfGravityX.GetHashCode() ^ CenterOfGravityY.GetHashCode() ^ Radius.GetHashCode();
+        public static bool operator ==(Circle c1, Circle c2) => c1.Equals(c2);
+        public static bool operator !=(Circle c1, Circle c2) => !c1.Equals(c2);
     }
     class Square : GeometryObject
     {
@@ -402,9 +459,9 @@ namespace Geometry
                 }
             }
         }
-        public Square() : this(0, 0, 1) { }
-        public Square(double centerOfGravitX, double centerOfGravitY, double sid) : base(centerOfGravitX, centerOfGravitY) { this.Side = sid; }
-        public static Square GetSquareFromConsole()
+        public Square() : this(0, 0, "Square1", 1) { }
+        public Square(double centerOfGravitX, double centerOfGravitY, string nam, double sid) : base(centerOfGravitX, centerOfGravitY, nam) { this.Side = sid; this.Name = nam; }
+        public static Square GetSquareFromConsole(int squareID)
         {
             double? x = null;
             double? y = null;
@@ -427,7 +484,7 @@ namespace Geometry
                     {
                         Console.Write("Enter length of the square's side: ");
                         a = double.Parse(Console.ReadLine());
-                        return new Square(x.Value, y.Value, a.Value);
+                        return new Square(x.Value, y.Value, $"Square{squareID}", a.Value);
                     }
                 }
                 catch (Exception e)
@@ -505,6 +562,14 @@ namespace Geometry
             }
         }
         public override string ToString() => base.ToString() + $" Side: {this.Side}";
+        public override bool Equals(object other)
+        {
+            Square s = other as Square;
+            return base.Equals(s) && s.Side == Side;
+        }
+        public override int GetHashCode() => CenterOfGravityX.GetHashCode() ^ CenterOfGravityY.GetHashCode() ^ Side.GetHashCode();
+        public static bool operator ==(Square s1, Square s2) => s1.Equals(s2);
+        public static bool operator !=(Square s1, Square s2) => !s1.Equals(s2);
     }
     class Point
     {
@@ -562,13 +627,14 @@ namespace Geometry
                 }
             }
         }
-        public Rectangle() : this(0, 0, 1, 2) { }
-        public Rectangle(double centerOfGravitX, double centerOfGravitY, double aSid, double bSid) : base(centerOfGravitX, centerOfGravitY)
+        public Rectangle() : this(0, 0, "Rectangle1", 1, 2) { }
+        public Rectangle(double centerOfGravitX, double centerOfGravitY, string name, double aSid, double bSid) : base(centerOfGravitX, centerOfGravitY, name)
         {
             this.ASide = aSid;
             this.BSide = bSid;
+            this.Name = name;
         }
-        public static Rectangle GetRectangleFromConsole()
+        public static Rectangle GetRectangleFromConsole(int rectangleID)
         {
             double? x = null;
             double? y = null;
@@ -598,7 +664,7 @@ namespace Geometry
                         Console.Write("Enter length of the rectangle's b side: ");
                         b = double.Parse(Console.ReadLine());
                     }
-                    return new Rectangle(x.Value, y.Value, a.Value, b.Value);
+                    return new Rectangle(x.Value, y.Value, $"Rectangle{rectangleID}", a.Value, b.Value);
                 }
                 catch (Exception e)
                 {
@@ -687,5 +753,13 @@ namespace Geometry
             }
         }
         public override string ToString() => base.ToString() + $" A: {this.ASide} B: {this.BSide}";
+        public override bool Equals(object other)
+        {
+            Rectangle r = other as Rectangle;
+            return base.Equals(r) && r.ASide == ASide && r.BSide == BSide;
+        }
+        public override int GetHashCode() => CenterOfGravityX.GetHashCode() ^ CenterOfGravityY.GetHashCode() ^ ASide.GetHashCode() ^ BSide.GetHashCode();
+        public static bool operator ==(Rectangle r1, Rectangle r2) => r1.Equals(r2);
+        public static bool operator !=(Rectangle r1, Rectangle r2) => !r1.Equals(r2);
     }
 }

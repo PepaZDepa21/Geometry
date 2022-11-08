@@ -14,12 +14,12 @@ namespace Geometry
         static void Main(string[] args)
         {
             string version = "v1.0";
-            List<Circle> circles = new List<Circle>() { new Circle(4, 5, 1, 7), new Circle(5, 4, 2, 7) };
-            List<Rectangle> rectangles = new List<Rectangle>() { new Rectangle(7, 8, 1, 1, 2), new Rectangle(1, 8, 2, 4, 2) };
-            List<Square> squares = new List<Square>() { new Square(3, 7, 1, 7), new Square(5, 4, 2, 7) };
+            List<Circle> circles = new List<Circle>() { new Circle(0, 0, 1, 1), new Circle(1, 1, 2, 1) };
+            List<Rectangle> rectangles = new List<Rectangle>() { new Rectangle(1, 1, 1, 1, 2), new Rectangle(1, 1, 2, 2, 1), Rectangle.GetRectangleFromConsole(3)};
+            List<Square> squares = new List<Square>() { new Square(1, 1, 1, 1), new Square(0, 0, 2, 1) };
             List<GeometryObject> geometryObject = new List<GeometryObject>();
-            Console.WriteLine(GetStringOfAllGeoObjects(geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
-            Console.WriteLine(AllIntersects(Rectangle.GetRectangleFromConsole(1), geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
+            //Console.WriteLine(GetStringOfAllGeoObjects(geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
+            Console.WriteLine(AllIntersects(rectangles[2], geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
             Console.ReadLine();
         }
         public static string GetStartString(string version)
@@ -167,32 +167,38 @@ namespace Geometry
         }
         public static string AllIntersects(GeometryObject go, List<GeometryObject> objects)
         {
-            List<GeometryObject> intesects = new List<GeometryObject>();
+            List<GeometryObject> intersects = new List<GeometryObject>();
             StringBuilder sb = new StringBuilder();
             sb.Append("+--------------+-------------------------------------+\n");
             sb.Append("| Object       | Objects that Intersects with Object |\n");
             sb.Append("+--------------+-------------------------------------+\n");
-            sb.Append($"| {go.GetType().ToString().Split('.')[1]}{go.ID}{new String(' ', 13 - go.GetType().ToString().Split('.')[1].Length - go.ID.ToString().Length)}| ");
+            sb.Append($"| {go.GetTypeString()}{go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}| ");
             foreach (var item in objects)
             {
-                if (go.GetType().ToString().Split('.')[1]+go.ID.ToString() == item.GetType().ToString().Split('.')[1] + item.ID.ToString())
+                if (go.GetTypeString()+go.ID.ToString() == item.GetTypeString() + item.ID.ToString())
                 {
                     continue;
                 }
-                if (go.IntersectsWith(item))
+                bool intersect = go.IntersectsWith(item);
+                if (intersect)
                 {
-                    intesects.Append(item);
+                    intersects.Add(item);
                 }
             }
-            if (intesects.Count > 0)
+            if (intersects.Count > 0)
             {
-                sb.Append($"{intesects[0].GetType().ToString().Split('.')[1]}{intesects[0].ID}{new String(' ', 36 - intesects[0].GetType().ToString().Split('.')[1].Length - intesects[0].ToString().Length)}|\n");
+                sb.Append($"{intersects[0].GetTypeString()}{intersects[0].ID}{new String(' ', 36 - intersects[0].GetTypeString().Length - intersects[0].ID.ToString().Length)}|\n");
                 sb.Append("+--------------+-------------------------------------+\n");
-                for (int i = 1; i < intesects.Count; i++)
+                for (int i = 1; i < intersects.Count; i++)
                 {
-                    sb.Append($"               | {intesects[i].GetType().ToString().Split('.')[1]}{intesects[i].ID}{new String(' ', 36 - intesects[i].GetType().ToString().Split('.')[1].Length - intesects[i].ToString().Length)}|\n");
+                    sb.Append($"               | {intersects[i].GetTypeString()}{intersects[i].ID}{new String(' ', 36 - intersects[i].GetTypeString().Length - intersects[i].ID.ToString().Length)}|\n");
                     sb.Append("               +-------------------------------------+\n");
                 }
+            }
+            else
+            {
+                sb.Append($"None{new String(' ', 32)}|\n");
+                sb.Append("+--------------+-------------------------------------+\n");
             }
             return sb.ToString();
         }
@@ -211,17 +217,17 @@ namespace Geometry
                     sb.Append("+-----------+--------+-----------------------+\n");
                     if (objects[i] is Circle)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}   |\n");
+                        sb.Append($"| {objects[i].GetTypeString()}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}   |\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
                     else if (objects[i] is Square)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}    r\n");
+                        sb.Append($"| {objects[i].GetTypeString()}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}    r\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
                     else if (objects[i] is Rectangle)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]} |   {objects[i].ID}{behindOC}| {objects[i].ToString()}  e\n");
+                        sb.Append($"| {objects[i].GetTypeString()} |   {objects[i].ID}{behindOC}| {objects[i].ToString()}  e\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
                 }
@@ -229,17 +235,17 @@ namespace Geometry
                 {
                     if (objects[i] is Circle)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}   |\n");
+                        sb.Append($"| {objects[i].GetTypeString()}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}   |\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
                     else if (objects[i] is Square)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}     |\n");
+                        sb.Append($"| {objects[i].GetTypeString()}    |   {objects[i].ID}{behindOC}| {objects[i].ToString()}     |\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
                     else if (objects[i] is Rectangle)
                     {
-                        sb.Append($"| {objects[i].GetType().ToString().Split('.')[1]} |   {objects[i].ID}{behindOC}| {objects[i].ToString()}   |\n");
+                        sb.Append($"| {objects[i].GetTypeString()} |   {objects[i].ID}{behindOC}| {objects[i].ToString()}   |\n");
                         sb.Append("+-----------+--------+-----------------------+\n");
                     }
                 }
@@ -285,6 +291,7 @@ namespace Geometry
         public virtual double Perimeter() => 0;
         public virtual double Area() => 0;
         public virtual bool IntersectsWith(GeometryObject go) => false;
+        public string GetTypeString() => this.GetType().ToString().Split('.')[1].ToString();
         public override string ToString() => $"X: {CenterOfGravityX} Y: {CenterOfGravityY}";
         public override bool Equals(object other)
         {

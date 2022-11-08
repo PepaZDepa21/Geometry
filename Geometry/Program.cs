@@ -15,11 +15,14 @@ namespace Geometry
         {
             string version = "v1.0";
             List<Circle> circles = new List<Circle>() { new Circle(0, 0, 1, 1), new Circle(1, 1, 2, 1) };
-            List<Rectangle> rectangles = new List<Rectangle>() { new Rectangle(1, 1, 1, 1, 2), new Rectangle(1, 1, 2, 2, 1), Rectangle.GetRectangleFromConsole(3)};
-            List<Square> squares = new List<Square>() { new Square(1, 1, 1, 1), new Square(0, 0, 2, 1) };
+            List<Rectangle> rectangles = new List<Rectangle>() { new Rectangle(1, 1, 1, 1, 2), new Rectangle(1, 1, 2, 2, 1), Rectangle.GetRectangleFromConsole(3) };
+            List<Square> squares = new List<Square>() { new Square(1, 1, 1, 2), new Square(0, 0, 2, 2) };
             List<GeometryObject> geometryObject = new List<GeometryObject>();
             //Console.WriteLine(GetStringOfAllGeoObjects(geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
-            Console.WriteLine(AllIntersects(rectangles[2], geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
+            //Console.WriteLine(AllIntersects(rectangles[2], geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
+            Console.WriteLine(IntersectsWithString(rectangles[2], circles[0]));
+            Console.WriteLine(IntersectsWithString(rectangles[2], squares[0]));
+            //Console.WriteLine(GetObjectArea(squares[1]));
             Console.ReadLine();
         }
         public static string GetStartString(string version)
@@ -79,8 +82,8 @@ namespace Geometry
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Calculates the area of given object\n\n");
-            sb.Append("Usage:   Geometry Area [object-type][object-number]\n");
-            sb.Append("Example: Geometry Area Circle2\n\n");
+            sb.Append("Usage:   Geometry Area [object-type] [object-number]\n");
+            sb.Append("Example: Geometry Area Circle 2\n\n");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circle]   \tObject of type Circle\n");
             sb.Append("  [Square]   \tObject of type Square\n");
@@ -104,8 +107,8 @@ namespace Geometry
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Check if 2 objects intersects in 2D\n\n");
-            sb.Append("Usage:   Geometry Intersect [first-object-type][first-object-number] [second-object-type][second-object-number]\n");
-            sb.Append("Example: Geometry Intersect Circle1 Square3\n\n");
+            sb.Append("Usage:   Geometry Intersect [first-object-type] [first-object-number] [second-object-type] [second-object-number]\n");
+            sb.Append("Example: Geometry Intersect Circle 1 Square 3\n\n");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circle]   \tObject type of Circle + Circle number\n");
             sb.Append("  [Rectangle]\tObject type of Rectagle + Rectangle number\n");
@@ -116,7 +119,7 @@ namespace Geometry
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Calculates the perimeter of given object\n\n");
-            sb.Append("Usage:   Geometry Perimeter [object-type][object-number]\n");
+            sb.Append("Usage:   Geometry Perimeter [object-type] [object-number]\n");
             sb.Append("Example: Geometry Perimeter Square1\n\n");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circle]   \tObject of type Circle\n");
@@ -128,8 +131,8 @@ namespace Geometry
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Remove certain instance of object\n\n");
-            sb.Append("Usage:   Geometry Remove [object-type][object-number]\n");
-            sb.Append("Example: Geometry Remove Square2\n\n");
+            sb.Append("Usage:   Geometry Remove [object-type] [object-number]\n");
+            sb.Append("Example: Geometry Remove Square 2\n\n");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circle]   \tRemoves the determined Circle\n");
             sb.Append("  [Rectangle]\tRemoves the determined Rectangle\n");
@@ -149,19 +152,19 @@ namespace Geometry
             sb.Append("  [Squares]   \tRemoves every existing square\n");
             return sb.ToString();
         }
-        public static GeometryObject AddGeometryObject(string go)
+        public static GeometryObject AddGeometryObject(string go, int objectID)
         {
             if (go.ToLower() == "circle")
             {
-                //return Circle.GetCircleFromConsole();
+                return Circle.GetCircleFromConsole(objectID);
             }
             else if (go.ToLower() == "square")
             {
-                //return Square.GetSquareFromConsole();
+                return Square.GetSquareFromConsole(objectID);
             }
             else if (go.ToLower() == "rectangle")
             {
-                //return Rectangle.GetRectangleFromConsole();
+                return Rectangle.GetRectangleFromConsole(objectID);
             }
             throw new ArgumentException();
         }
@@ -169,10 +172,10 @@ namespace Geometry
         {
             List<GeometryObject> intersects = new List<GeometryObject>();
             StringBuilder sb = new StringBuilder();
-            sb.Append("+--------------+-------------------------------------+\n");
-            sb.Append("| Object       | Objects that Intersects with Object |\n");
-            sb.Append("+--------------+-------------------------------------+\n");
-            sb.Append($"| {go.GetTypeString()}{go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}| ");
+            sb.Append("+---------------+-------------------------------------+\n");
+            sb.Append("| Object        | Objects that Intersects with Object |\n");
+            sb.Append("+---------------+-------------------------------------+\n");
+            sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}| ");
             foreach (var item in objects)
             {
                 if (go.GetTypeString()+go.ID.ToString() == item.GetTypeString() + item.ID.ToString())
@@ -187,18 +190,45 @@ namespace Geometry
             }
             if (intersects.Count > 0)
             {
-                sb.Append($"{intersects[0].GetTypeString()}{intersects[0].ID}{new String(' ', 36 - intersects[0].GetTypeString().Length - intersects[0].ID.ToString().Length)}|\n");
-                sb.Append("+--------------+-------------------------------------+\n");
+                sb.Append($"{intersects[0].GetTypeString()} {intersects[0].ID}{new String(' ', 35 - intersects[0].GetTypeString().Length - intersects[0].ID.ToString().Length)}|\n");
+                sb.Append("+---------------+-------------------------------------+\n");
                 for (int i = 1; i < intersects.Count; i++)
                 {
-                    sb.Append($"               | {intersects[i].GetTypeString()}{intersects[i].ID}{new String(' ', 36 - intersects[i].GetTypeString().Length - intersects[i].ID.ToString().Length)}|\n");
-                    sb.Append("               +-------------------------------------+\n");
+                    sb.Append($"                | {intersects[i].GetTypeString()} {intersects[i].ID}{new String(' ', 35 - intersects[i].GetTypeString().Length - intersects[i].ID.ToString().Length)}|\n");
+                    sb.Append("                +-------------------------------------+\n");
                 }
             }
             else
             {
                 sb.Append($"None{new String(' ', 32)}|\n");
                 sb.Append("+--------------+-------------------------------------+\n");
+            }
+            return sb.ToString();
+        }
+        public static string GetObjectArea(GeometryObject go)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("+---------------+-------------+\n");
+            sb.Append("| Object        | Object Area |\n");
+            sb.Append("+---------------+-------------+\n");
+            sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}| {go.Area()} cm2 {new String(' ', 7-go.Area().ToString().Length)}|\n");
+            sb.Append("+---------------+-------------+\n");
+            return sb.ToString();
+        }
+        public static string IntersectsWithString(GeometryObject g1, GeometryObject g2)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (g1.IntersectsWith(g2))
+            {
+                sb.Append($"+{new String('-', 21 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
+                sb.Append($"| {g1.GetTypeString()} {g1.ID} intersects with {g2.GetTypeString()} {g2.ID} |\n");
+                sb.Append($"+{new String('-', 21 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
+            }
+            else
+            {
+                sb.Append($"+{new String('-', 29 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
+                sb.Append($"| {g1.GetTypeString()} {g1.ID} doesn't intersects with {g2.GetTypeString()} {g2.ID} |\n");
+                sb.Append($"+{new String('-', 29 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
             }
             return sb.ToString();
         }
@@ -258,15 +288,15 @@ namespace Geometry
             circles.RemoveAt(circleNum - 1);
             return circles;
         }
-        public static List<Square> RemoveSquare(List<Square> squares, int squareNum)
-        {
-            squares.RemoveAt(squareNum - 1);
-            return squares;
-        }
         public static List<Rectangle> RemoveRectangle(List<Rectangle> rectangles, int rectangleNum)
         {
             rectangles.RemoveAt(rectangleNum - 1);
             return rectangles;
+        }
+        public static List<Square> RemoveSquare(List<Square> squares, int squareNum)
+        {
+            squares.RemoveAt(squareNum - 1);
+            return squares;
         }
     }
     class GeometryObject

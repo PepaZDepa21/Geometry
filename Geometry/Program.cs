@@ -17,7 +17,7 @@ namespace Geometry
             string version = "v1.0";
             List<Circle> circles = new List<Circle>() { new Circle(0, 0, 1, 1), new Circle(1, 1, 2, 1) };
             List<Rectangle> rectangles = new List<Rectangle>() { new Rectangle(1, 1, 1, 1, 2), new Rectangle(1, 1, 2, 2, 1) };
-            List<Square> squares = new List<Square>() { new Square(1, 1, 1, 2), new Square(0, 0, 2, 100-0) };
+            List<Square> squares = new List<Square>() { new Square(1, 1, 1, 2), new Square(0, 0, 2, 19)};
             List<GeometryObject> geometryObject = new List<GeometryObject>();
             Console.WriteLine(version);
             //Console.WriteLine(GetStringOfAllGeoObjects(geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
@@ -25,6 +25,7 @@ namespace Geometry
             Console.WriteLine(IntersectsWithString(rectangles[1], circles[0]));
             Console.WriteLine(IntersectsWithString(rectangles[1], squares[0]));
             Console.WriteLine(GetObjectArea(squares[1]));
+            Console.WriteLine(GetObjectPerimeter(squares[1]));
             Console.ReadLine();
         }
         public static string GetStartString(string version)
@@ -226,9 +227,9 @@ namespace Geometry
                 reminder = areaStringLength % 2 == 0 ? 1 : 0;
             }
             sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
-            sb.Append($"| Object        |{new String(' ', 1 + additionalSpace/2 + reminder)}Object Area{new String(' ', 1 + additionalSpace / 2)}|\n");
+            sb.Append($"| Object        |{new String(' ', 1 + additionalSpace/2 + areaStringLength % 2)}Object Area{new String(' ', 1 + additionalSpace / 2)}|\n");
             sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
-            sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}|{new String(' ', space + reminder)}{area} j{new String(' ', space)}|\n");
+            sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}|{new String(' ', space + reminder)}{area} j2{new String(' ', space)}|\n");
             sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
             return sb.ToString();
         }

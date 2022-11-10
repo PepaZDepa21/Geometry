@@ -9,7 +9,7 @@ using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Geometry
-{ 
+{
     internal class Program
     {
         static void Main(string[] args)
@@ -17,7 +17,7 @@ namespace Geometry
             string version = "v1.0";
             List<Circle> circles = new List<Circle>() { new Circle(0, 0, 1, 1), new Circle(1, 1, 2, 1) };
             List<Rectangle> rectangles = new List<Rectangle>() { new Rectangle(1, 1, 1, 1, 2), new Rectangle(1, 1, 2, 2, 1) };
-            List<Square> squares = new List<Square>() { new Square(1, 1, 1, 2), new Square(0, 0, 2, 19)};
+            List<Square> squares = new List<Square>() { new Square(1, 1, 1, 2), new Square(0, 0, 2, 19) };
             List<GeometryObject> geometryObject = new List<GeometryObject>();
             Console.WriteLine(version);
             //Console.WriteLine(GetStringOfAllGeoObjects(geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
@@ -57,6 +57,8 @@ namespace Geometry
             return sb.ToString();
         }
         public static string GetHelpWithCommandString(string command) => $"For help with command {command} type \"{command} -h\" or \"{command} --help\"";
+
+
         public static string GetAddHelpString()
         {
             StringBuilder sb = new StringBuilder();
@@ -67,92 +69,6 @@ namespace Geometry
             sb.Append("  [Circle]   \tCreates circle then asks you to enter it's properties\n");
             sb.Append("  [Rectangle]\tCreates rectangle then asks you to enter it's properties\n");
             sb.Append("  [Square]   \tCreates square then asks you to enter it's properties\n");
-            return sb.ToString();
-        }
-        public static string GetAllIntersectsHelpString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Return every object that intersects with given object\n\n");
-            sb.Append("Usage:   Geometry AllIntersects [object-type][object-number]\n");
-            sb.Append("Example: Geometry All Intersects Rectangle2\n\n");
-            sb.Append("-h, --help     \tPrints this usage information.\n\n");
-            sb.Append("  [Circle]   \tObject of type Circle\n");
-            sb.Append("  [Square]   \tObject of type Square\n");
-            sb.Append("  [Rectangle]\tObject of type Rectangle\n");
-            return sb.ToString(); 
-        }
-        public static string GetAreaHelpString() 
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Calculates the area of given object\n\n");
-            sb.Append("Usage:   Geometry Area [object-type] [object-number]\n");
-            sb.Append("Example: Geometry Area Circle 2\n\n");
-            sb.Append("-h, --help     \tPrints this usage information.\n\n");
-            sb.Append("  [Circle]   \tObject of type Circle\n");
-            sb.Append("  [Square]   \tObject of type Square\n");
-            sb.Append("  [Rectangle]\tObject of type Rectangle\n");
-            return sb.ToString();
-        }
-        public static string GetGetHelpString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Get properties of every existing objects or certain object type\n\n");
-            sb.Append("Usage:    Geometry Get (optional)[object-type]\n");
-            sb.Append("Example1: Geometry Get\n");
-            sb.Append("Example2: Geometry Get Square\n\n");
-            sb.Append("-h, --help     \tPrints this usage information.\n\n");
-            sb.Append("  [Circle]   \tGet properties of every existing circle\n");
-            sb.Append("  [Rectangle]\tGet properties of every existing rectangle\n");
-            sb.Append("  [Square]   \tGet properties of every existing square\n");
-            return sb.ToString();
-        }
-        public static string GetIntersectHelpString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Check if 2 objects intersects in 2D\n\n");
-            sb.Append("Usage:   Geometry Intersect [first-object-type] [first-object-number] [second-object-type] [second-object-number]\n");
-            sb.Append("Example: Geometry Intersect Circle 1 Square 3\n\n");
-            sb.Append("-h, --help     \tPrints this usage information.\n\n");
-            sb.Append("  [Circle]   \tObject type of Circle + Circle number\n");
-            sb.Append("  [Rectangle]\tObject type of Rectagle + Rectangle number\n");
-            sb.Append("  [Square]   \tObject type of Square + Square number\n");
-            return sb.ToString();
-        }
-        public static string GetPerimeterHelpString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Calculates the perimeter of given object\n\n");
-            sb.Append("Usage:   Geometry Perimeter [object-type] [object-number]\n");
-            sb.Append("Example: Geometry Perimeter Square1\n\n");
-            sb.Append("-h, --help     \tPrints this usage information.\n\n");
-            sb.Append("  [Circle]   \tObject of type Circle\n");
-            sb.Append("  [Square]   \tObject of type Square\n");
-            sb.Append("  [Rectangle]\tObject of type Rectangle\n");
-            return sb.ToString();
-        }
-        public static string GetRemoveHelpString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Remove certain instance of object\n\n");
-            sb.Append("Usage:   Geometry Remove [object-type] [object-number]\n");
-            sb.Append("Example: Geometry Remove Square 2\n\n");
-            sb.Append("-h, --help     \tPrints this usage information.\n\n");
-            sb.Append("  [Circle]   \tRemoves the determined Circle\n");
-            sb.Append("  [Rectangle]\tRemoves the determined Rectangle\n");
-            sb.Append("  [Square]   \tRemoves the determined Square\n");
-            return sb.ToString();
-        }
-        public static string GetRemoveAllHelpString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Remove certain instance object\n\n");
-            sb.Append("Usage:   Geometry RemoveAll [object-type][object-number]\n");
-            sb.Append("Example: Geometry RemoveAll Squares\n");
-            sb.Append("-h, --help     \tPrints this usage information.\n\n");
-            sb.Append("  [Circles]   \tRemoves every existing cirlce\n");
-            sb.Append("  [Objects]   \tRemoves every existing geometry object\n");
-            sb.Append("  [Rectangles]\tRemoves every existing rectangle\n");
-            sb.Append("  [Squares]   \tRemoves every existing square\n");
             return sb.ToString();
         }
         public static GeometryObject AddGeometryObject(string go, int objectID)
@@ -171,6 +87,20 @@ namespace Geometry
             }
             throw new ArgumentException();
         }
+
+
+        public static string GetAllIntersectsHelpString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Return every object that intersects with given object\n\n");
+            sb.Append("Usage:   Geometry AllIntersects [object-type][object-number]\n");
+            sb.Append("Example: Geometry All Intersects Rectangle2\n\n");
+            sb.Append("-h, --help     \tPrints this usage information.\n\n");
+            sb.Append("  [Circle]   \tObject of type Circle\n");
+            sb.Append("  [Square]   \tObject of type Square\n");
+            sb.Append("  [Rectangle]\tObject of type Rectangle\n");
+            return sb.ToString();
+        }
         public static string AllIntersects(GeometryObject go, List<GeometryObject> objects)
         {
             List<GeometryObject> intersects = new List<GeometryObject>();
@@ -181,7 +111,7 @@ namespace Geometry
             sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}| ");
             foreach (var item in objects)
             {
-                if (go.GetTypeString()+go.ID.ToString() == item.GetTypeString() + item.ID.ToString())
+                if (go.GetTypeString() + go.ID.ToString() == item.GetTypeString() + item.ID.ToString())
                 {
                     continue;
                 }
@@ -208,6 +138,20 @@ namespace Geometry
             }
             return sb.ToString();
         }
+
+
+        public static string GetAreaHelpString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Calculates the area of given object\n\n");
+            sb.Append("Usage:   Geometry Area [object-type] [object-number]\n");
+            sb.Append("Example: Geometry Area Circle 2\n\n");
+            sb.Append("-h, --help     \tPrints this usage information.\n\n");
+            sb.Append("  [Circle]   \tObject of type Circle\n");
+            sb.Append("  [Square]   \tObject of type Square\n");
+            sb.Append("  [Rectangle]\tObject of type Rectangle\n");
+            return sb.ToString();
+        }
         public static string GetObjectArea(GeometryObject go)
         {
             StringBuilder sb = new StringBuilder();
@@ -227,27 +171,25 @@ namespace Geometry
                 reminder = areaStringLength % 2 == 0 ? 1 : 0;
             }
             sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
-            sb.Append($"| Object        |{new String(' ', 1 + additionalSpace/2 + areaStringLength % 2)}Object Area{new String(' ', 1 + additionalSpace / 2)}|\n");
+            sb.Append($"| Object        |{new String(' ', 1 + additionalSpace / 2 + areaStringLength % 2)}Object Area{new String(' ', 1 + additionalSpace / 2)}|\n");
             sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
             sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}|{new String(' ', space + reminder)}{area} j2{new String(' ', space)}|\n");
             sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
             return sb.ToString();
         }
-        public static string IntersectsWithString(GeometryObject g1, GeometryObject g2)
+
+
+        public static string GetGetHelpString()
         {
             StringBuilder sb = new StringBuilder();
-            if (g1.IntersectsWith(g2))
-            {
-                sb.Append($"+{new String('-', 21 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
-                sb.Append($"| {g1.GetTypeString()} {g1.ID} intersects with {g2.GetTypeString()} {g2.ID} |\n");
-                sb.Append($"+{new String('-', 21 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
-            }
-            else
-            {
-                sb.Append($"+{new String('-', 29 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
-                sb.Append($"| {g1.GetTypeString()} {g1.ID} doesn't intersects with {g2.GetTypeString()} {g2.ID} |\n");
-                sb.Append($"+{new String('-', 29 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
-            }
+            sb.Append("Get properties of every existing objects or certain object type\n\n");
+            sb.Append("Usage:    Geometry Get (optional)[object-type]\n");
+            sb.Append("Example1: Geometry Get\n");
+            sb.Append("Example2: Geometry Get Square\n\n");
+            sb.Append("-h, --help     \tPrints this usage information.\n\n");
+            sb.Append("  [Circle]   \tGet properties of every existing circle\n");
+            sb.Append("  [Rectangle]\tGet properties of every existing rectangle\n");
+            sb.Append("  [Square]   \tGet properties of every existing square\n");
             return sb.ToString();
         }
         public static string GetStringOfAllGeoObjects(List<GeometryObject> objects)
@@ -301,6 +243,51 @@ namespace Geometry
             return sb.ToString();
 
         }
+
+
+        public static string GetIntersectHelpString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Check if 2 objects intersects in 2D\n\n");
+            sb.Append("Usage:   Geometry Intersect [first-object-type] [first-object-number] [second-object-type] [second-object-number]\n");
+            sb.Append("Example: Geometry Intersect Circle 1 Square 3\n\n");
+            sb.Append("-h, --help     \tPrints this usage information.\n\n");
+            sb.Append("  [Circle]   \tObject type of Circle + Circle number\n");
+            sb.Append("  [Rectangle]\tObject type of Rectagle + Rectangle number\n");
+            sb.Append("  [Square]   \tObject type of Square + Square number\n");
+            return sb.ToString();
+        }
+        public static string IntersectsWithString(GeometryObject g1, GeometryObject g2)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (g1.IntersectsWith(g2))
+            {
+                sb.Append($"+{new String('-', 21 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
+                sb.Append($"| {g1.GetTypeString()} {g1.ID} intersects with {g2.GetTypeString()} {g2.ID} |\n");
+                sb.Append($"+{new String('-', 21 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
+            }
+            else
+            {
+                sb.Append($"+{new String('-', 29 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
+                sb.Append($"| {g1.GetTypeString()} {g1.ID} doesn't intersects with {g2.GetTypeString()} {g2.ID} |\n");
+                sb.Append($"+{new String('-', 29 + g1.GetTypeString().Length + g1.ID.ToString().Length + g2.GetTypeString().Length + g2.ID.ToString().Length)}+\n");
+            }
+            return sb.ToString();
+        }
+
+
+        public static string GetPerimeterHelpString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Calculates the perimeter of given object\n\n");
+            sb.Append("Usage:   Geometry Perimeter [object-type] [object-number]\n");
+            sb.Append("Example: Geometry Perimeter Square1\n\n");
+            sb.Append("-h, --help     \tPrints this usage information.\n\n");
+            sb.Append("  [Circle]   \tObject of type Circle\n");
+            sb.Append("  [Square]   \tObject of type Square\n");
+            sb.Append("  [Rectangle]\tObject of type Rectangle\n");
+            return sb.ToString();
+        }
         public static string GetObjectPerimeter(GeometryObject go)
         {
             StringBuilder sb = new StringBuilder();
@@ -326,6 +313,20 @@ namespace Geometry
             sb.Append($"+---------------+{new String('-', 18 + additionalSpace)}+\n");
             return sb.ToString();
         }
+
+
+        public static string GetRemoveHelpString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Remove certain instance of object\n\n");
+            sb.Append("Usage:   Geometry Remove [object-type] [object-number]\n");
+            sb.Append("Example: Geometry Remove Square 2\n\n");
+            sb.Append("-h, --help     \tPrints this usage information.\n\n");
+            sb.Append("  [Circle]   \tRemoves the determined Circle\n");
+            sb.Append("  [Rectangle]\tRemoves the determined Rectangle\n");
+            sb.Append("  [Square]   \tRemoves the determined Square\n");
+            return sb.ToString();
+        }
         public static List<Circle> RemoveCircle(List<Circle> circles, int circleNum)
         {
             circles.RemoveAt(circleNum - 1);
@@ -340,6 +341,48 @@ namespace Geometry
         {
             squares.RemoveAt(squareNum - 1);
             return squares;
+        }
+
+
+        public static string GetRemoveAllHelpString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Remove certain instance object\n\n");
+            sb.Append("Usage:   Geometry RemoveAll [object-type][object-number]\n");
+            sb.Append("Example: Geometry RemoveAll Squares\n");
+            sb.Append("-h, --help     \tPrints this usage information.\n\n");
+            sb.Append("  [Circles]   \tRemoves every existing cirlce\n");
+            sb.Append("  [Objects]   \tRemoves every existing geometry object\n");
+            sb.Append("  [Rectangles]\tRemoves every existing rectangle\n");
+            sb.Append("  [Squares]   \tRemoves every existing square\n");
+            return sb.ToString();
+        }
+        public static List<Circle> RemoveAllCircles(List<Circle> circles) { circles.Clear(); return circles; }
+        public static List<Square> RemoveAllSquares(List<Square> squares) { squares.Clear(); return squares; }
+        public static List<Rectangle> RemoveAllRectangles(List<Rectangle> rectangles) { rectangles.Clear(); return rectangles; }
+    }
+
+
+    class Point
+    {
+        private double x;
+        public double X
+        {
+            get => this.x;
+            set { this.x = value; }
+        }
+        private double y;
+        public double Y
+        {
+            get => this.y;
+            set { this.y = value; }
+        }
+
+        public Point() : this(0, 0) { }
+        public Point(double xValue, double yValue)
+        {
+            this.X = xValue;
+            this.Y = yValue;
         }
     }
     class GeometryObject
@@ -629,28 +672,6 @@ namespace Geometry
         public override int GetHashCode() => CenterOfGravityX.GetHashCode() ^ CenterOfGravityY.GetHashCode() ^ Side.GetHashCode();
         public static bool operator ==(Square s1, Square s2) => s1.Equals(s2);
         public static bool operator !=(Square s1, Square s2) => !s1.Equals(s2);
-    }
-    class Point
-    {
-        private double x;
-        public double X
-        {
-            get => this.x;
-            set { this.x = value; }
-        }
-        private double y;
-        public double Y
-        {
-            get => this.y;
-            set { this.y = value; }
-        }
-
-        public Point() : this(0, 0) { }
-        public Point(double xValue, double yValue)
-        {
-            this.X = xValue;
-            this.Y = yValue;
-        }
     }
     class Rectangle : GeometryObject
     {

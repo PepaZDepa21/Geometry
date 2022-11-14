@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using System.Security.Policy;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Geometry
 {
@@ -14,28 +9,249 @@ namespace Geometry
     {
         static void Main(string[] args)
         {
-            string version = "v1.0";
-            List<Circle> circles = new List<Circle>() { new Circle(0, 0, 1, 1), new Circle(1, 1, 2, 1) };
-            List<Rectangle> rectangles = new List<Rectangle>() { new Rectangle(1, 1, 1, 1, 2), new Rectangle(1, 1, 2, 2, 1) };
-            List<Square> squares = new List<Square>() { new Square(1, 1, 1, 2), new Square(0, 0, 2, 19) };
-            List<GeometryObject> geometryObject = new List<GeometryObject>();
-            Console.WriteLine(version);
+            Version version = new Version(1, 0, 0);
+
+            List<Circle> circles = new List<Circle>();
+            List<Rectangle> rectangles = new List<Rectangle>();
+            List<Square> squares = new List<Square>();
+            List<GeometryObject> geometryObjects = new List<GeometryObject>();
+
+            List<string> commands = new List<string> { "-h", "--help", "Add", "AllIntersects", "Area", "Get", "Intersects", "Perimeter", "Remove", "RemoveAll" };
+            List<string> objectTypes = new List<string> { "Circle", "Square", "Rectangle" };
+            List<string> objectTypesRemoveAll = new List<string> { "Circles", "Squares", "Rectangles", "Objects" };
+
+            Console.WriteLine(GetStartString(version.ToString()));
+            while (true)
+            {
+                string[] arguments = Console.ReadLine().Split(' ');
+                int ID1 = 0; int ID2 = 0;
+                try
+                {
+                    if (arguments[0] == "") { continue; }
+                    else if (arguments[0] != "Geometry")
+                    {
+                        Console.WriteLine(GetStringGeometry());
+                        continue;
+                    }
+                    else if (!commands.Contains(arguments[1]))
+                    {
+                        Console.WriteLine(UnknownCommand());
+                        GetHelpWithCommands();
+                        continue;
+                    }
+                    else if (arguments[1] == "RemoveAll" && !objectTypesRemoveAll.Contains(arguments[2]))
+                    {
+                        Console.WriteLine(UnknownObjectType());
+                        Console.WriteLine(GetHelpWithCommandString(arguments[1]));
+                        continue;
+                    }
+                    else if (arguments[1] == "IntersectsWith") { ID1 = Int32.Parse(arguments[3]) - 1; ID2 = Int32.Parse(arguments[5]) - 1; }
+                    else if (arguments[1] == "AllIntersects") { ID1 = Int32.Parse(arguments[3]) - 1; }
+                    else if (arguments.Length > 2)
+                    {
+                        if (!objectTypes.Contains(arguments[2]))
+                        {
+                            Console.WriteLine(UnknownObjectType());
+                            Console.WriteLine(GetHelpWithCommandString(arguments[1]));
+                            continue;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (e is FormatException)
+                    {
+                        Console.WriteLine(ObjectIDExpected());
+                        continue;
+                    }
+                    Console.WriteLine(UnknownCommand());
+                }
+                if (arguments[1] == "-h" || arguments[1] == "--help")
+                {
+                    Console.WriteLine(GetHelpString());
+                }
+                else if (arguments.Length <= 2)
+                {
+                    Console.WriteLine(ObjectTypeExpected());
+                    continue;
+                }
+                else if (arguments[1] == "Add")
+                {
+                    if (arguments[2] == "Circle")
+                    {
+                        circles.Add(Circle.GetCircleFromConsole(circles.Count + 1));
+                        Console.WriteLine("Circle successfully created!");
+                    }
+                    else if (arguments[2] == "Square")
+                    {
+                        squares.Add(Square.GetSquareFromConsole(circles.Count + 1));
+                        Console.WriteLine("Square successfully created!");
+                    }
+                    else if (arguments[2] == "Rectangle")
+                    {
+                        rectangles.Add(Rectangle.GetRectangleFromConsole(circles.Count + 1));
+                        Console.WriteLine("Rectangle successfully created!");
+                    }
+                    else if (arguments[2] == "-h" || arguments[2] == "--help")
+                    {
+                        Console.WriteLine(GetAddHelpString());
+                    }
+                }/*
+                else if (arguments[1] == "AllIntersects")
+                {
+                    if (arguments[2] == "-h" || arguments[2] == "--help")
+                    {
+                        Console.WriteLine(GetAllIntersectsHelpString());
+                    }
+                    else if (arguments[2] == "Circle")
+                    {
+                        Console.WriteLine(AllIntersects(circles[ID1], geometryObjects.Concat(circles).ToList()));
+                    }
+                    else if (arguments[2] == "Square")
+                    {
+                        Console.WriteLine(AllIntersects(squares[ID1], geometryObjects.Concat(squares).ToList()));
+                    }
+                    else if (arguments[2] == "Rectangle")
+                    {
+                        Console.WriteLine(AllIntersects(rectangles[ID1], geometryObjects.Concat(rectangles).ToList()));
+                    }
+                }
+                else if (arguments[1] == "Area")
+                {
+                    if (arguments[2] == "-h" || arguments[2] == "--help")
+                    {
+                        Console.WriteLine(GetAreaHelpString());
+                    }
+                    else if (arguments[2] == "Circle")
+                    {
+                        Console.WriteLine(GetObjectArea(circles[ID1]));
+                    }
+                    else if (arguments[2] == "Square")
+                    {
+                        Console.WriteLine(GetObjectArea(squares[ID1]));
+                    }
+                    else if (arguments[2] == "Rectangle")
+                    {
+                        Console.WriteLine(GetObjectArea(rectangles[ID1]));
+                    }
+                }
+                else if (arguments[1] == "Get")
+                {
+                    Console.WriteLine(GetStringOfAllGeoObjects(geometryObjects.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
+                }
+                else if (arguments[1] == "Intersects")
+                {
+                    GeometryObject g1;
+                    GeometryObject g2;
+                    if (arguments[2] == "Circle")
+                    {
+                        g1 = circles[ID1];
+                    }
+                    else if (arguments[2] == "Square")
+                    {
+                        g1 = squares[ID1];
+                    }
+                    else if (arguments[2] == "Rectangle")
+                    {
+                        g1 = rectangles[ID1];
+                    }
+                    else
+                    {
+                        g1 = null;
+                    }
+                    if (arguments[4] == "Circle")
+                    {
+                        g2 = circles[ID2];
+                    }
+                    else if (arguments[4] == "Square")
+                    {
+                        g2 = squares[ID2];
+                    }
+                    else if (arguments[4] == "Rectangle")
+                    {
+                        g2 = rectangles[ID2];
+                    }
+                    else
+                    {
+                        g2 = null;
+                    }
+                    Console.WriteLine(IntersectsWithString(g1, g2));
+                }
+                else if (arguments[1] == "Perimetr")
+                {
+                    if (arguments[2] == "-h" || arguments[2] == "--help")
+                    {
+                        Console.WriteLine(GetPerimeterHelpString());
+                    }
+                    else if (arguments[2] == "Circle")
+                    {
+                        Console.WriteLine(GetObjectPerimeter(circles[ID1]));
+                    }
+                    else if (arguments[2] == "Square")
+                    {
+                        Console.WriteLine(GetObjectPerimeter(squares[ID1]));
+                    }
+                    else if (arguments[2] == "Rectangle")
+                    {
+                        Console.WriteLine(GetObjectPerimeter(rectangles[ID1]));
+                    }
+                }
+                else if (arguments[1] == "Remove")
+                {
+                    if (arguments[2] == "Circles")
+                    {
+                        circles = RemoveCircle(circles, ID1);
+                    }
+                    else if (arguments[2] == "Squares")
+                    {
+                        squares = RemoveSquare(squares, ID1);
+                    }
+                    else if (arguments[2] == "Rectangles")
+                    {
+                        rectangles = RemoveRectangle(rectangles, ID1);
+                    }
+                }
+                else if (arguments[1] == "RemoveAll")
+                {
+                    if (arguments[2] == "Circles")
+                    {
+                        circles = RemoveAllCircles(circles);
+                    }
+                    else if (arguments[2] == "Squares")
+                    {
+                        squares = RemoveAllSquares(squares);
+                    }
+                    else if (arguments[2] == "Rectangles")
+                    {
+                        rectangles = RemoveAllRectangles(rectangles);
+                    }
+                    else if (arguments[2] == "Objects")
+                    {
+                        circles = RemoveAllCircles(circles);
+                        squares = RemoveAllSquares(squares);
+                        rectangles = RemoveAllRectangles(rectangles);
+                    }
+                }*/
+            }
+            //Console.WriteLine(version);
             //Console.WriteLine(GetStringOfAllGeoObjects(geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
             //Console.WriteLine(AllIntersects(rectangles[2], geometryObject.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
-            Console.WriteLine(IntersectsWithString(rectangles[1], circles[0]));
-            Console.WriteLine(IntersectsWithString(rectangles[1], squares[0]));
-            Console.WriteLine(GetObjectArea(squares[1]));
-            Console.WriteLine(GetObjectPerimeter(squares[1]));
-            Console.ReadLine();
         }
+
+
         public static string GetStartString(string version)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Commandline tool for 2D geometry\n");
-            sb.Append($"Version: {version}");
+            sb.Append($"Version: {version}\n");
             sb.Append("Write \"Geometry -h\" or \"Geometry --help\" to get help with commands\n");
             return sb.ToString();
         }
+        public static string GetStringGeometry() => "Unexpected input first argument should be Geometry!";
+        public static string UnknownCommand() => "Unknown command!";
+        public static string UnknownObjectType() => "Unknown object type!";
+        public static string ObjectTypeExpected() => "The object type was expected!";
+        public static string ObjectIDExpected() => "Number of object ID was expected!";
         public static string GetHelpString()
         {
             StringBuilder sb = new StringBuilder();
@@ -56,7 +272,11 @@ namespace Geometry
             sb.Append("  RemoveAll   \tRemoves all instances of given type\n");
             return sb.ToString();
         }
+        public static string GetHelpWithCommands() => "For help type \"Geometry -h\" or \"Geomtry --help\"";
         public static string GetHelpWithCommandString(string command) => $"For help with command {command} type \"{command} -h\" or \"{command} --help\"";
+
+
+
 
 
         public static string GetAddHelpString()
@@ -94,7 +314,7 @@ namespace Geometry
             StringBuilder sb = new StringBuilder();
             sb.Append("Return every object that intersects with given object\n\n");
             sb.Append("Usage:   Geometry AllIntersects [object-type][object-number]\n");
-            sb.Append("Example: Geometry All Intersects Rectangle2\n\n");
+            sb.Append("Example: Geometry AllIntersects Rectangle2\n\n");
             sb.Append("-h, --help     \tPrints this usage information.\n\n");
             sb.Append("  [Circle]   \tObject of type Circle\n");
             sb.Append("  [Square]   \tObject of type Square\n");
@@ -477,7 +697,7 @@ namespace Geometry
                     }
                     else
                     {
-                          throw new NullReferenceException();
+                        throw new NullReferenceException();
                     }
                 }
             }

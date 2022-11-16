@@ -45,8 +45,8 @@ namespace Geometry
                         Console.WriteLine(GetHelpWithCommandString(arguments[1]));
                         continue;
                     }
-                    else if (arguments[1] == "IntersectsWith") { ID1 = Int32.Parse(arguments[3]) - 1; ID2 = Int32.Parse(arguments[5]) - 1; }
-                    else if (arguments[1] == "AllIntersects") { ID1 = Int32.Parse(arguments[3]) - 1; }
+                    else if (arguments[1] == "IntersectsWith") { ID1 = Int32.Parse(arguments[3]); ID2 = Int32.Parse(arguments[5]); }
+                    else if (arguments[1] == "AllIntersects") { ID1 = Int32.Parse(arguments[3]); }
                     else if (arguments.Length > 2)
                     {
                         if (!objectTypes.Contains(arguments[2]))
@@ -96,7 +96,7 @@ namespace Geometry
                     {
                         Console.WriteLine(GetAddHelpString());
                     }
-                }/*
+                }
                 else if (arguments[1] == "AllIntersects")
                 {
                     if (arguments[2] == "-h" || arguments[2] == "--help")
@@ -105,17 +105,42 @@ namespace Geometry
                     }
                     else if (arguments[2] == "Circle")
                     {
-                        Console.WriteLine(AllIntersects(circles[ID1], geometryObjects.Concat(circles).ToList()));
+                        if (circles.Count < ID1)
+                        {
+                            Console.WriteLine(ObjectDoesntExist("Circle", ID1));
+                            continue;
+                        }
+                        else
+                        {
+                            Console.WriteLine(AllIntersects(circles[ID1-1], geometryObjects.Concat(circles).ToList()));
+                        }
                     }
                     else if (arguments[2] == "Square")
                     {
-                        Console.WriteLine(AllIntersects(squares[ID1], geometryObjects.Concat(squares).ToList()));
+                        if (circles.Count < ID1)
+                        {
+                            Console.WriteLine(ObjectDoesntExist("Square", ID1));
+                            continue;
+                        }
+                        else
+                        {
+                            Console.WriteLine(AllIntersects(squares[ID1-1], geometryObjects.Concat(squares).ToList()));
+                        }
                     }
                     else if (arguments[2] == "Rectangle")
                     {
-                        Console.WriteLine(AllIntersects(rectangles[ID1], geometryObjects.Concat(rectangles).ToList()));
+                        if (circles.Count < ID1)
+                        {
+                            Console.WriteLine(ObjectDoesntExist("Rectangle", ID1));
+                            continue;
+                        }
+                        else
+                        {
+                            Console.WriteLine(AllIntersects(rectangles[ID1 - 1], geometryObjects.Concat(rectangles).ToList()));
+                        }
                     }
                 }
+                /*
                 else if (arguments[1] == "Area")
                 {
                     if (arguments[2] == "-h" || arguments[2] == "--help")
@@ -252,6 +277,7 @@ namespace Geometry
         public static string UnknownObjectType() => "Unknown object type!";
         public static string ObjectTypeExpected() => "The object type was expected!";
         public static string ObjectIDExpected() => "Number of object ID was expected!";
+        public static string ObjectDoesntExist(string type, int ID) => $"{type} {ID} doesn't exist!";
         public static string GetHelpString()
         {
             StringBuilder sb = new StringBuilder();
@@ -354,7 +380,7 @@ namespace Geometry
             else
             {
                 sb.Append($"None{new String(' ', 32)}|\n");
-                sb.Append("+--------------+-------------------------------------+\n");
+                sb.Append("+---------------+-------------------------------------+\n");
             }
             return sb.ToString();
         }

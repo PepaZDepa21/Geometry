@@ -46,7 +46,13 @@ namespace Geometry
                         continue;
                     }
                     else if (arguments[1] == "IntersectsWith") { ID1 = Int32.Parse(arguments[3]); ID2 = Int32.Parse(arguments[5]); }
-                    else if (arguments[1] == "AllIntersects") { ID1 = Int32.Parse(arguments[3]); }
+                    else if (arguments[1] == "AllIntersects" || arguments[1] == "Area") 
+                    {
+                        if (arguments[2] != "-h" || arguments[2] != "--help")
+                        {
+                            ID1 = Int32.Parse(arguments[3]);
+                        }
+                    }
                     else if (arguments.Length > 2)
                     {
                         if (!objectTypes.Contains(arguments[2]))
@@ -140,7 +146,6 @@ namespace Geometry
                         }
                     }
                 }
-                /*
                 else if (arguments[1] == "Area")
                 {
                     if (arguments[2] == "-h" || arguments[2] == "--help")
@@ -149,17 +154,18 @@ namespace Geometry
                     }
                     else if (arguments[2] == "Circle")
                     {
-                        Console.WriteLine(GetObjectArea(circles[ID1]));
+                        Console.WriteLine(GetObjectArea(circles[ID1 - 1]));
                     }
                     else if (arguments[2] == "Square")
                     {
-                        Console.WriteLine(GetObjectArea(squares[ID1]));
+                        Console.WriteLine(GetObjectArea(squares[ID1 - 1]));
                     }
                     else if (arguments[2] == "Rectangle")
                     {
-                        Console.WriteLine(GetObjectArea(rectangles[ID1]));
+                        Console.WriteLine(GetObjectArea(rectangles[ID1 - 1]));
                     }
                 }
+                /*
                 else if (arguments[1] == "Get")
                 {
                     Console.WriteLine(GetStringOfAllGeoObjects(geometryObjects.Concat(circles).Concat(rectangles).Concat(squares).ToList()));
@@ -417,9 +423,9 @@ namespace Geometry
                 reminder = areaStringLength % 2 == 0 ? 1 : 0;
             }
             sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
-            sb.Append($"| Object        |{new String(' ', 1 + additionalSpace / 2 + areaStringLength % 2)}Object Area{new String(' ', 1 + additionalSpace / 2)}|\n");
+            sb.Append($"| Object        |{new String(' ', 1 + additionalSpace / 2 + reminder)}Object Area{new String(' ', 1 + additionalSpace / 2)}|\n");
             sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
-            sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}|{new String(' ', space + reminder)}{area} j2{new String(' ', space)}|\n");
+            sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}|{new String(' ', space + areaStringLength%2)}{area} j2{new String(' ', space)}|\n");
             sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
             return sb.ToString();
         }

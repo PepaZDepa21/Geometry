@@ -11,7 +11,7 @@ namespace Geometry
         {
             Version version = new Version(1, 0, 0);
 
-            List<Circle> circles = new List<Circle>();
+            List<Circle> circles = new List<Circle>() { new Circle(4, 4, 1, 8), new Circle(4, 4, 2, 4), new Circle(4, 4, 3, 500), new Circle(4, 4, 4, 60000000000000)};
             List<Rectangle> rectangles = new List<Rectangle>();
             List<Square> squares = new List<Square>();
             List<GeometryObject> geometryObjects = new List<GeometryObject>();
@@ -19,7 +19,10 @@ namespace Geometry
             List<string> commands = new List<string> { "-h", "--help", "Add", "AllIntersects", "Area", "Get", "Intersects", "Perimeter", "Remove", "RemoveAll" };
             List<string> objectTypes = new List<string> { "Circle", "Square", "Rectangle" };
             List<string> objectTypesRemoveAll = new List<string> { "Circles", "Squares", "Rectangles", "Objects" };
-
+            Console.WriteLine(GetObjectPerimeter(circles[0]));
+            Console.WriteLine(GetObjectPerimeter(circles[1]));
+            Console.WriteLine(GetObjectPerimeter(circles[2]));
+            Console.WriteLine(GetObjectPerimeter(circles[3]));
             Console.WriteLine(GetStartString(version.ToString()));
             while (true)
             {
@@ -45,7 +48,18 @@ namespace Geometry
                         Console.WriteLine(GetHelpWithCommandString(arguments[1]));
                         continue;
                     }
-                    else if (arguments[1] == "IntersectsWith") { ID1 = Int32.Parse(arguments[3]); ID2 = Int32.Parse(arguments[5]); }
+                    else if (arguments[1] == "IntersectsWith")
+                    {
+                        if (arguments.Length == 6)
+                        {
+                            ID1 = Int32.Parse(arguments[3]);
+                            ID2 = Int32.Parse(arguments[5]);
+                        }
+                        else if (arguments.Length <= 7)
+                        {
+
+                        }
+                    }
                     else if (arguments[1] == "AllIntersects" || arguments[1] == "Area") 
                     {
                         if (arguments[2] != "-h" || arguments[2] != "--help")
@@ -308,9 +322,6 @@ namespace Geometry
         public static string GetHelpWithCommandString(string command) => $"For help with command {command} type \"{command} -h\" or \"{command} --help\"";
 
 
-
-
-
         public static string GetAddHelpString()
         {
             StringBuilder sb = new StringBuilder();
@@ -407,26 +418,31 @@ namespace Geometry
         public static string GetObjectArea(GeometryObject go)
         {
             StringBuilder sb = new StringBuilder();
-            double area = go.Area();
-            int areaStringLength = go.Area().ToString().Length + 2;
+            double area = Math.Round(go.Area(), 2);
+            int areaStringLength = area.ToString().Length;
             int additionalSpace = 0;
             int space = 0;
             int reminder = 0;
-            if (areaStringLength > 11)
+            if (areaStringLength > 8)
             {
-                additionalSpace = areaStringLength - 12;
+                additionalSpace = areaStringLength - 8;
                 space = 1;
+                reminder = areaStringLength % 2;
+                sb.Append($"+---------------+{new String('-', 13 + additionalSpace)}+\n");
+                sb.Append($"| Object        |{new String(' ', 1 + additionalSpace / 2 + reminder)}Object Area{new String(' ', 1 + additionalSpace / 2)}|\n");
+                sb.Append($"+---------------+{new String('-', 13 + additionalSpace)}+\n");
+                sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}| {area} j2 |\n");
+                sb.Append($"+---------------+{new String('-', 13 + additionalSpace)}+\n");
             }
             else
             {
-                space = (13 - areaStringLength) / 2;
-                reminder = areaStringLength % 2 == 0 ? 1 : 0;
+                space = (16 - areaStringLength) / 4;
+                sb.Append($"+---------------+{new String('-', 13 + additionalSpace)}+\n");
+                sb.Append($"| Object        |{new String(' ', 1 + additionalSpace / 2)}Object Area{new String(' ', 1 + additionalSpace / 2)}|\n");
+                sb.Append($"+---------------+{new String('-', 13 + additionalSpace)}+\n");
+                sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}|{new String(' ', space + areaStringLength % 2)}{area} j2{new String(' ', space)}|\n");
+                sb.Append($"+---------------+{new String('-', 13 + additionalSpace)}+\n");
             }
-            sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
-            sb.Append($"| Object        |{new String(' ', 1 + additionalSpace / 2 + reminder)}Object Area{new String(' ', 1 + additionalSpace / 2)}|\n");
-            sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
-            sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}|{new String(' ', space + areaStringLength%2)}{area} j2{new String(' ', space)}|\n");
-            sb.Append($"+---------------+{new String('-', 14 + additionalSpace)}+\n");
             return sb.ToString();
         }
 
@@ -543,26 +559,29 @@ namespace Geometry
         public static string GetObjectPerimeter(GeometryObject go)
         {
             StringBuilder sb = new StringBuilder();
-            double area = go.Perimeter();
-            int perimeterStringLength = go.Perimeter().ToString().Length + 2;
+            double area = Math.Round(go.Perimeter(), 2);
+            int perimeterStringLength = go.Perimeter().ToString().Length;
             int additionalSpace = 0;
             int space = 0;
-            int reminder = 0;
-            if (perimeterStringLength > 16)
+            if (perimeterStringLength > 14)
             {
-                additionalSpace = perimeterStringLength - 16;
+                additionalSpace = perimeterStringLength - 14;
                 space = 1;
+                sb.Append($"+---------------+{new String('-', 18 + additionalSpace)}+\n");
+                sb.Append($"| Object        |{new String(' ', 1 + additionalSpace / 2 + perimeterStringLength % 2)}Object Perimeter{new String(' ', 1 +  additionalSpace / 2)}|\n");
+                sb.Append($"+---------------+{new String('-', 18 + additionalSpace)}+\n");
+                sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}| {area} j |\n");
+                sb.Append($"+---------------+{new String('-', 18 + additionalSpace)}+\n");
             }
             else
             {
                 space = (18 - perimeterStringLength) / 2;
-                reminder = perimeterStringLength % 2 == 0 ? 1 : 0;
+                sb.Append($"+---------------+{new String('-', 18 + additionalSpace)}+\n");
+                sb.Append($"| Object        |{new String(' ', 1 + additionalSpace / 2 + additionalSpace % 2)}Object Perimeter{new String(' ', 1 + additionalSpace / 2)}|\n");
+                sb.Append($"+---------------+{new String('-', 18 + additionalSpace)}+\n");
+                sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}|{new String(' ', space + perimeterStringLength % 2)}{area} j{new String(' ', space)}|\n");
+                sb.Append($"+---------------+{new String('-', 18 + additionalSpace)}+\n");
             }
-            sb.Append($"+---------------+{new String('-', 18 + additionalSpace)}+\n");
-            sb.Append($"| Object        |{new String(' ', 1 + additionalSpace / 2 + additionalSpace % 2)}Object Perimeter{new String(' ', 1 + additionalSpace / 2)}|\n");
-            sb.Append($"+---------------+{new String('-', 18 + additionalSpace)}+\n");
-            sb.Append($"| {go.GetTypeString()} {go.ID}{new String(' ', 13 - go.GetTypeString().Length - go.ID.ToString().Length)}|{new String(' ', space + perimeterStringLength % 2)}{area} j{new String(' ', space)}|\n");
-            sb.Append($"+---------------+{new String('-', 18 + additionalSpace)}+\n");
             return sb.ToString();
         }
 
